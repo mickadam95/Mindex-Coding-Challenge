@@ -1,8 +1,12 @@
 package com.mindex.challenge.data;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.annotation.Id;
 
-public class Employee {
+public class Employee extends Compensation {
+    @Id //added the Id identifier 
     private String employeeId;
     private String firstName;
     private String lastName;
@@ -53,11 +57,51 @@ public class Employee {
         this.department = department;
     }
 
+    /**
+     *
+     * @return List Employee
+     */
     public List<Employee> getDirectReports() {
         return directReports;
     }
 
+    /**
+     *
+     * @param directReports
+     */
     public void setDirectReports(List<Employee> directReports) {
         this.directReports = directReports;
+    }
+
+    /**
+     *
+     * @param effectiveDate
+     */
+    public void setEffectiveDate(LocalDate effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
+    /**
+     *
+     * @param salary
+     */
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    /**
+     *
+     * @return LocalDate
+     */
+    public LocalDate getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    /**
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getSalary() {
+        return salary;
     }
 }

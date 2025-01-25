@@ -2,6 +2,9 @@ package com.mindex.challenge.controller;
 
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.service.EmployeeService;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EmployeeController {
+
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
@@ -32,6 +38,19 @@ public class EmployeeController {
 
         return employeeService.read(id);
     }
+    
+    /**
+     * This is an endpoint that returns the compensation amount for a specific Employee id.
+     * 
+     * @param id
+     * @return BigDecimal
+     */
+    @GetMapping("/employee/compensation/{id}")
+    public BigDecimal getEmployeeComp(@PathVariable String id) {
+        LOG.debug("Received employee compensation request for id [{}]", id);
+
+        return employeeService.getEmployeeComp(id);
+    }
 
     @PutMapping("/employee/{id}")
     public Employee update(@PathVariable String id, @RequestBody Employee employee) {
@@ -39,5 +58,21 @@ public class EmployeeController {
 
         employee.setEmployeeId(id);
         return employeeService.update(employee);
+    }
+
+    /**
+     *This is an endpoint to update compensation on a specific Employee id.
+     * 
+     * @param id
+     * @param compensation
+     * @param date
+     * @return
+     */
+    @RequestMapping(value = {"/employee/update/{id}/{compensation}/{date}"}, method = RequestMethod.PUT)
+    public Employee updateCompensation(@PathVariable String id, @PathVariable BigDecimal compensation, @PathVariable LocalDate date) {
+
+        //Keep the value provided to two decimal places
+        compensation = compensation.setScale(2, RoundingMode.HALF_UP);
+        return employeeService.updateCompenstaion(id, compensation, date);
     }
 }
